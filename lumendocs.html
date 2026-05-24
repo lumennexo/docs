@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LUMEN DOCS — Gestión Documental Institucional</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0f1f9;
+      --surface: #ffffff;
+      --blue-deep: #3730c4;
+      --blue-mid: #5b55e0;
+      --blue-light: #c5c3f0;
+      --blue-pale: #e8e8f8;
+      --text: #1a1a2e;
+      --text-muted: #6b6b8a;
+      --accent: #3730c4;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND DECORATION ── */
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-orb-1 {
+      width: 500px; height: 500px;
+      background: var(--blue-deep);
+      top: -100px; right: -100px;
+    }
+    .bg-orb-2 {
+      width: 350px; height: 350px;
+      background: var(--blue-mid);
+      bottom: 100px; left: -80px;
+    }
+
+    /* ── LAYOUT ── */
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 32px 0 0;
+      opacity: 0;
+      animation: fadeDown 0.6s ease forwards;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .brand-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--blue-deep);
+      text-transform: uppercase;
+    }
+
+    .brand-tag {
+      font-size: 0.7rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 72px 0 48px;
+      gap: 28px;
+    }
+
+    .hero-icon-wrap {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.2s forwards;
+    }
+
+    .hero-icon-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -14px;
+      border-radius: 50%;
+      background: var(--blue-pale);
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    .hero-icon-wrap::after {
+      content: '';
+      position: absolute;
+      inset: -28px;
+      border-radius: 50%;
+      border: 1px solid var(--blue-light);
+      animation: pulse 3s ease-in-out 0.5s infinite;
+    }
+
+    .hero-icon {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .hero-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--blue-mid);
+      background: var(--blue-pale);
+      border: 1px solid var(--blue-light);
+      padding: 5px 14px;
+      border-radius: 100px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.35s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.6rem, 8vw, 4rem);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.45s forwards;
+    }
+
+    .hero-title span {
+      color: var(--blue-deep);
+      font-weight: 600;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--text-muted);
+      max-width: 480px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.55s forwards;
+    }
+
+    /* ── FEATURES ── */
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.65s forwards;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--blue-pale);
+      border-radius: 14px;
+      padding: 20px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--blue-light);
+      box-shadow: 0 4px 24px rgba(55, 48, 196, 0.08);
+    }
+
+    .feature-icon {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .feature-title {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+      letter-spacing: 0.01em;
+    }
+
+    .feature-desc {
+      font-size: 0.75rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--blue-light);
+      margin: 0 auto 40px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.75s forwards;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.8s forwards;
+      margin-bottom: 64px;
+    }
+
+    .cta-copy {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      text-align: center;
+      font-weight: 300;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--blue-deep);
+      color: #fff;
+      text-decoration: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 16px 36px;
+      border-radius: 100px;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 32px rgba(55, 48, 196, 0.28);
+    }
+
+    .cta-btn:hover {
+      background: var(--blue-mid);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(55, 48, 196, 0.36);
+    }
+
+    .cta-btn:active {
+      transform: translateY(0);
+    }
+
+    .cta-arrow {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid rgba(255,255,255,0.6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+    }
+
+    .cta-btn:hover .cta-arrow {
+      transform: translateX(2px);
+    }
+
+    .cta-note {
+      font-size: 0.72rem;
+      color: var(--blue-light);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      width: 100%;
+      border-top: 1px solid var(--blue-pale);
+      padding: 24px 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.95s forwards;
+    }
+
+    .footer-logo {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+      opacity: 0.5;
+    }
+
+    .footer-text {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%       { transform: scale(1.06); opacity: 0.7; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .features { grid-template-columns: 1fr; }
+      .hero { padding: 52px 0 36px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <div class="wrapper">
+
+    <header>
+      <div class="brand">
+        <img class="brand-logo" src="https://i.imgur.com/placeholder.png" alt="LUMEN DOCS" onerror="this.style.display='none'"/>
+        <div>
+          <div class="brand-name">Lumen Docs</div>
+          <div class="brand-tag">Gestión Documental con IA</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+
+      <div class="hero-icon-wrap">
+        <!-- SVG inline del logo LUMEN DOCS basado en el ícono proporcionado -->
+        <svg class="hero-icon" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="200" cy="200" r="190" fill="#eeeef8"/>
+          <circle cx="200" cy="200" r="150" fill="none" stroke="#b0aeea" stroke-width="2"/>
+          <circle cx="200" cy="200" r="100" fill="none" stroke="#b0aeea" stroke-width="1.5"/>
+          <circle cx="200" cy="200" r="60" fill="#3730c4"/>
+          <circle cx="200" cy="200" r="30" fill="#c5c3f0"/>
+          <!-- crosshair lines -->
+          <rect x="194" y="30" width="12" height="40" rx="4" fill="#5b55e0"/>
+          <rect x="194" y="330" width="12" height="40" rx="4" fill="#5b55e0"/>
+          <rect x="30" y="194" width="40" height="12" rx="4" fill="#8b89d8"/>
+          <rect x="330" y="194" width="40" height="12" rx="4" fill="#8b89d8"/>
+        </svg>
+      </div>
+
+      <span class="hero-label">Sistema Institucional</span>
+
+      <h1 class="hero-title">
+        Documentos oficiales.<br/>
+        <span>Generados con IA.</span>
+      </h1>
+
+      <p class="hero-sub">
+        LUMEN DOCS automatiza la creación, organización y distribución de comunicados institucionales — con folio, firma, formato y entrega en segundos.
+      </p>
+
+    </section>
+
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Redacción automática</div>
+        <div class="feature-desc">De ideas sueltas a documento profesional en segundos, con IA integrada.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <div class="feature-title">Control de folios</div>
+        <div class="feature-desc">Numeración automática, historial y trazabilidad institucional completa.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📂</div>
+        <div class="feature-title">Archivos organizados</div>
+        <div class="feature-desc">Carpetas automáticas por año, tipo y nivel. Sin desorden ni pérdidas.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📲</div>
+        <div class="feature-title">Entrega multicanal</div>
+        <div class="feature-desc">PDF, correo institucional y texto para WhatsApp listos al instante.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="cta-section">
+      <p class="cta-copy">Completa el formulario y genera tu primer documento institucional.</p>
+      <a href="https://forms.gle/AX4ePquoHwXz6tzcA" target="_blank" class="cta-btn">
+        Ingresar al sistema
+        <span class="cta-arrow">→</span>
+      </a>
+      <span class="cta-note">Acceso institucional · LUMEN DOCS</span>
+    </div>
+
+  </div>
+
+  <footer>
+    <svg class="footer-logo" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="190" fill="#eeeef8"/>
+      <circle cx="200" cy="200" r="60" fill="#3730c4"/>
+      <circle cx="200" cy="200" r="30" fill="#c5c3f0"/>
+    </svg>
+    <span class="footer-text">LUMEN DOCS — Gestión Documental Institucional</span>
+  </footer>
+
+</body>
+</html>
